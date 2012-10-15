@@ -1,5 +1,6 @@
 package com.bazaarvoice.maven.plugin.s3repo.create;
 
+import com.google.common.base.Objects;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.util.StringUtils;
@@ -117,4 +118,18 @@ public final class ArtifactItem {
         this.resolvedArtifact = resolvedArtifact;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this).
+                add("groupId", groupId).
+                add("artifactId", artifactId).
+                add("version", version).
+                add("type", type).
+                add("classifier", classifier).
+                add("targetSubfolder", targetSubfolder).
+                add("targetBaseName", targetBaseName).
+                add("targetExtension", targetExtension).
+                add("resolvedArtifact", resolvedArtifact).
+                toString();
+    }
 }

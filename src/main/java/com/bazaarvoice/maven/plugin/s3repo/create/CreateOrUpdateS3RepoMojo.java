@@ -311,7 +311,7 @@ public class CreateOrUpdateS3RepoMojo extends AbstractMojo {
     }
 
     private org.sonatype.aether.artifact.Artifact toDefaultArtifact(ArtifactItem item) {
-        return new DefaultArtifact(item.getGroupId(), item.getArtifactId(), item.getType()/*extension*/, item.getClassifier(), item.getVersion());
+        return new DefaultArtifact(item.getGroupId(), item.getArtifactId(), item.getClassifier(), item.getType()/*extension*/, item.getVersion());
     }
 
     private AmazonS3Client createS3Client() {
