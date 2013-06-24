@@ -1,6 +1,7 @@
 package com.bazaarvoice.maven.plugin.s3repo.create;
 
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -80,10 +81,10 @@ public class CreateOrUpdateS3RepoMojo extends AbstractMojo {
     @Parameter(property = "s3repo.repositoryPath", required = true)
     private String s3RepositoryPath;
 
-    @Parameter(property = "s3repo.accessKey", required = true)
+    @Parameter(property = "s3repo.accessKey")
     private String s3AccessKey;
 
-    @Parameter(property = "s3repo.secretKey", required = true)
+    @Parameter(property = "s3repo.secretKey")
     private String s3SecretKey;
 
     /** Execute all steps up to and excluding the upload to the S3. This can be set to true to perform a "dryRun" execution. */
@@ -315,7 +316,11 @@ public class CreateOrUpdateS3RepoMojo extends AbstractMojo {
     }
 
     private AmazonS3Client createS3Client() {
-        return new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
+        if (s3AccessKey != null || s3SecretKey != null) {
+            return new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
+        } else {
+            return new AmazonS3Client(new DefaultAWSCredentialsProviderChain());
+        }
     }
 
     private void ensureS3BucketExists(CreateOrUpdateContext context) throws MojoExecutionException {
