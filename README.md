@@ -96,6 +96,10 @@ explanation:
                     -->
                     <createrepo>/usr/bin/createrepo</createrepo>
                     <!--
+                        Optional. You may need to provide additional options to the "createrepo" command.
+                    -->
+                    <createrepoOpts>--simple-md-filenames --no-database</createrepoOpts>
+                    <!--
                         The S3 path to your repository. The first path entry is the *bucket*; optional
                         subpaths may indicate a repository that is not at the root/bucket level.
                         Examples; any of these are valid:
@@ -181,6 +185,7 @@ A verbose example:
         -Ds3repo.doNotUpload=true \
         -Ds3repo.doNotPreClean=true \
         -Ds3repo.createrepo=/usr/bin/createrepo \
+        -Ds3repo.createrepoOpts="--simple-md-filenames --no-database" \
         -Ds3repo.excludes=repo/relative/path/my-artifact-1.0.noarch.rpm,repo/relative/path/another-artifact-5.3.noarch.rpm
 
 You can use "s3repo.doNotUpload" to rebuild the repository locally but not upload it. Use "s3repo.doNotValidate"
@@ -228,4 +233,4 @@ not just those listed in the YUM metadata (typically this is not what is desired
 Wishlist
 ========
 * upload arbitrary RPM to repository without needing a Maven project/POM (i.e., in the Mojo, requiresProject = false)
-* consider no pre-clean by default; but consider safety of this &mdash; comparing file hashes and removing local files 
+* consider no pre-clean by default; but consider safety of this &mdash; comparing file hashes and removing local files

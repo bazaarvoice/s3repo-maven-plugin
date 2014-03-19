@@ -95,6 +95,10 @@ public class CreateOrUpdateS3RepoMojo extends AbstractMojo {
     @Parameter(property = "s3repo.createrepo", defaultValue = "createrepo")
     private String createrepo;
 
+    /** Additional options for the createrepo command. See http://linux.die.net/man/8/createrepo. */
+    @Parameter(property = "s3repo.createrepoOpts", defaultValue = "")
+    private String createrepoOpts;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         CreateOrUpdateContext context = new CreateOrUpdateContext();
@@ -127,7 +131,7 @@ public class CreateOrUpdateS3RepoMojo extends AbstractMojo {
 
     /** Create a {@link LocalYumRepoFacade} which will allow us to query and operate on a local (on-disk) yum repository. */
     private LocalYumRepoFacade determineLocalYumRepo() {
-        return new LocalYumRepoFacade(stagingDirectory, createrepo, getLog());
+        return new LocalYumRepoFacade(stagingDirectory, createrepo, createrepoOpts, getLog());
     }
 
     private void maybeUploadRepositoryUpdate(CreateOrUpdateContext context) throws MojoExecutionException {

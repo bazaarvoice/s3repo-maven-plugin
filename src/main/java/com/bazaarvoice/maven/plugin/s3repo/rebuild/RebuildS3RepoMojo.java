@@ -15,6 +15,8 @@ import com.bazaarvoice.maven.plugin.s3repo.support.LocalYumRepoFacade;
 import com.bazaarvoice.maven.plugin.s3repo.util.ExtraFileUtils;
 import com.bazaarvoice.maven.plugin.s3repo.util.ExtraIOUtils;
 import com.bazaarvoice.maven.plugin.s3repo.util.S3Utils;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import org.apache.commons.lang.StringUtils;
@@ -98,6 +100,10 @@ public final class RebuildS3RepoMojo extends AbstractMojo {
      */
     @Parameter(property = "s3repo.excludes", defaultValue = "")
     private String excludes;
+
+    /** Additional options for the createrepo command. See http://linux.die.net/man/8/createrepo. */
+    @Parameter(property = "s3repo.createrepoOpts", defaultValue = "")
+    private String createrepoOpts;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -370,7 +376,7 @@ public final class RebuildS3RepoMojo extends AbstractMojo {
 
     /** Create a {@link com.bazaarvoice.maven.plugin.s3repo.support.LocalYumRepoFacade} which will allow us to query and operate on a local (on-disk) yum repository. */
     private LocalYumRepoFacade determineLocalYumRepo() {
-        return new LocalYumRepoFacade(stagingDirectory, createrepo, getLog());
+        return new LocalYumRepoFacade(stagingDirectory, createrepo, createrepoOpts, getLog());
     }
 
     private AmazonS3Client createS3Client() {

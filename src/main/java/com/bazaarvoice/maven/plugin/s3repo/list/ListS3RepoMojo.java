@@ -30,7 +30,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 
-@Mojo (name = "list-repo", requiresProject = false)
+@Mojo(name = "list-repo", requiresProject = false)
 public final class ListS3RepoMojo extends AbstractMojo {
 
     /** Staging directory. This is where we will download any repo files that are needed (e.g., metadata files). */
@@ -40,13 +40,13 @@ public final class ListS3RepoMojo extends AbstractMojo {
     /**
      * The s3 path to the root of the target repository.
      * These are all valid values:
-     *      "s3://Bucket1/Repo1"
-     *      "/Bucket/Repo1"
+     * "s3://Bucket1/Repo1"
+     * "/Bucket/Repo1"
      */
-    @Parameter (property = "s3repo.repositoryPath", required = true)
+    @Parameter(property = "s3repo.repositoryPath", required = true)
     private String s3RepositoryPath;
 
-    @Parameter (property = "s3repo.accessKey")
+    @Parameter(property = "s3repo.accessKey")
     private String s3AccessKey;
 
     @Parameter(property = "s3repo.secretKey")
@@ -181,13 +181,15 @@ public final class ListS3RepoMojo extends AbstractMojo {
         getLog().info("I will use " + stagingDirectory.getAbsolutePath() + " as your staging directory.");
     }
 
-    /** Create a {@link com.bazaarvoice.maven.plugin.s3repo.support.LocalYumRepoFacade} which will allow us to query and
-     * operate on a local (on-disk) yum repository. */
+    /**
+     * Create a {@link com.bazaarvoice.maven.plugin.s3repo.support.LocalYumRepoFacade} which will allow us to query and
+     * operate on a local (on-disk) yum repository.
+     */
     private LocalYumRepoFacade determineLocalYumRepo(S3RepositoryPath s3RepositoryPath) {
         return new LocalYumRepoFacade(
             s3RepositoryPath.hasBucketRelativeFolder()
                 ? new File(stagingDirectory, s3RepositoryPath.getBucketRelativeFolder())
-                : stagingDirectory, createrepo, getLog());
+                : stagingDirectory, createrepo, "", getLog());
     }
 
     private boolean isMetadataFile(S3ObjectSummary summary, S3RepositoryPath s3RepositoryPath) {
