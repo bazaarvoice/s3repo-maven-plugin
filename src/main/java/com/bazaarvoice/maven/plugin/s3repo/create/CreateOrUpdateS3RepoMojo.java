@@ -26,12 +26,12 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.io.InputStreamFacade;
-import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.RepositorySystemSession;
-import org.sonatype.aether.resolution.ArtifactRequest;
-import org.sonatype.aether.resolution.ArtifactResolutionException;
-import org.sonatype.aether.util.StringUtils;
-import org.sonatype.aether.util.artifact.DefaultArtifact;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -302,7 +302,7 @@ public class CreateOrUpdateS3RepoMojo extends AbstractMojo {
         return new ArtifactRequest(toDefaultArtifact(item), project.getRemoteProjectRepositories(), "project");
     }
 
-    private org.sonatype.aether.artifact.Artifact toDefaultArtifact(ArtifactItem item) {
+    private org.eclipse.aether.artifact.Artifact toDefaultArtifact(ArtifactItem item) {
         return new DefaultArtifact(item.getGroupId(), item.getArtifactId(), item.getClassifier(), item.getType()/*extension*/, item.getVersion());
     }
 

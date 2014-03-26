@@ -2,8 +2,8 @@ package com.bazaarvoice.maven.plugin.s3repo.create;
 
 import com.google.common.base.Objects;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.sonatype.aether.resolution.ArtifactResult;
-import org.sonatype.aether.util.StringUtils;
+import org.eclipse.aether.resolution.ArtifactResult;
+import org.eclipse.aether.util.StringUtils;
 
 public final class ArtifactItem {
 

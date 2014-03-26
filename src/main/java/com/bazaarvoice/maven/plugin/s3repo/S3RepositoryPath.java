@@ -2,7 +2,7 @@ package com.bazaarvoice.maven.plugin.s3repo;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.sonatype.aether.util.StringUtils;
+import org.eclipse.aether.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
