@@ -2,6 +2,7 @@ package com.bazaarvoice.maven.plugin.s3repo.rebuild;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.BasicSessionCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -71,6 +72,12 @@ public final class RebuildS3RepoMojo extends AbstractMojo {
 
     @Parameter(property = "s3repo.secretKey")
     private String s3SecretKey;
+
+    @Parameter(property = "s3repo.sessionToken")
+    private String s3SessionToken;
+
+    @Parameter(property = "s3repo.awsStsFlag", defaultValue = "false")
+    private boolean awsStsFlag;
 
     /** Do not try to validate the current repository metadata before recreating the repository. */
     @Parameter(property = "s3repo.doNotValidate", defaultValue = "false")
@@ -432,11 +439,30 @@ public final class RebuildS3RepoMojo extends AbstractMojo {
         return new LocalYumRepoFacade(stagingDirectory, createrepo, createrepoOpts, getLog());
     }
 
-    private AmazonS3Client createS3Client() {
-        if (s3AccessKey != null || s3SecretKey != null) {
-            return new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
+    private AmazonS3Client createS3Client() throws MojoExecutionException {
+        if (awsStsFlag) {
+            try {
+                if (s3AccessKey == null) {
+                    s3AccessKey = System.getenv("AWS_ACCESS_KEY_ID");
+                }
+                if (s3SecretKey == null) {
+                    s3SecretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
+                }
+                if (s3SessionToken == null) {
+                    s3SessionToken = System.getenv("AWS_SESSION_TOKEN");
+                }
+            } catch (NullPointerException e) {
+                throw new MojoExecutionException("Failed to get the environment variables AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN", e);
+            }
+
+            BasicSessionCredentials basicSessionCredentials = new BasicSessionCredentials(s3AccessKey, s3SecretKey, s3SessionToken);
+            return new AmazonS3Client(basicSessionCredentials);
         } else {
-            return new AmazonS3Client(new DefaultAWSCredentialsProviderChain());
+            if (s3AccessKey != null || s3SecretKey != null) {
+                return new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
+            } else {
+                return new AmazonS3Client(new DefaultAWSCredentialsProviderChain());
+            }
         }
     }
 
