@@ -115,6 +115,17 @@ explanation:
                     <s3AccessKey>${yourS3AccessKey}</s3AccessKey>
                     <s3SecretKey>${yourS3SecretKey}</s3SecretKey>
                     <!--
+                        Optional. Enable this flag to pass AWS STS Authentication Credentials.
+                        AWS STS Temporary Authentication has AccessKey, SecretKey and SecurityToken
+                        Use "-Ds3repo.awsStsFlag=true" on the command-line instead
+                    -->
+                    <awsStsFlag>false<awsStsFlag>
+                    <!--
+                        Optional. Pass the SecurityToken, if awsStsFlag is enabled to true.
+                        Use "-Ds3repo.s3SessionToken=YOURTEMPORARYSESSIONTOKEN" on the command-line instead
+                    -->
+                    <s3SessionToken>${yourtemporarySessionToken}</s3SessionToken>
+                    <!--
                         You can specify multiple artifact items to copy to the repo.
                     -->
                     <artifactItems>
@@ -197,6 +208,8 @@ You can use "s3repo.excludes" to specify a comma-delimted list of repo-relative 
 listed paths will be removed/deleted from the target S3 bucket. A common idiom is to use the "list-repo" goal (see below)
 to produce a comma-delimited list of ALL artifacts and then edit that list to desired exclusions to use in the rebuild-repo
 execution.
+
+You can use "s3repo.awsStsFlag=true" and specify a Temporary Session Token as "s3repo.sessionToken=YOURTOKEN" to force the plugin to use accesskey, SecretKey and SessionToken for Authentication.
 
 Use "removeOldRepodata" to cleanup old repodata which accumulates over time.
 
